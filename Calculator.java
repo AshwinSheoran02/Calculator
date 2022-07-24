@@ -8,15 +8,18 @@ import java.awt.event.*;
 public class Calculator extends JFrame implements ActionListener {    
 
 	private static final long serialVersionUID = 1L;
-	JPanel[] row = new JPanel[5];
-    JButton[] button = new JButton[19];
+	JPanel[] row = new JPanel[6];
+    JButton[] button = new JButton[24];
     String[] buttonString = {"7", "8", "9", "+",
                              "4", "5", "6", "-",
                              "1", "2", "3", "*",
                              ".", "/", "C", "√",
-                             "+/-", "=", "0"};
+                             "+/-", "=","0","x²",
+                            "π" , "x!" , "logₑ" };
     int[] dimW = {430,70,150,140};
     int[] dimH = {50, 60};
+    // System.out.println(buttonString.length);
+    // System.out.println(buttonString[buttonString.length-1]);
     Dimension displayDimension = new Dimension(dimW[0], dimH[0]);
     Dimension regularDimension = new Dimension(dimW[1], dimH[1]);
     Dimension rColumnDimension = new Dimension(dimW[2], dimH[1]);
@@ -27,12 +30,12 @@ public class Calculator extends JFrame implements ActionListener {
     Font font = new Font("Times new Roman", Font.BOLD, 20);
     
     Calculator() {
-        super("Calculator");
+        super(" Calculator");
         setDesign();
-        setSize(500, 350);
+        setSize(510, 460);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        GridLayout grid = new GridLayout(5,5);
+        GridLayout grid = new GridLayout(6,5);
         setLayout(grid);
         
         for(int i = 0; i < 4; i++)
@@ -40,13 +43,13 @@ public class Calculator extends JFrame implements ActionListener {
         
         FlowLayout f1 = new FlowLayout(FlowLayout.CENTER);
         FlowLayout f2 = new FlowLayout(FlowLayout.CENTER,1,1);
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 6; i++)
             row[i] = new JPanel();
         row[0].setLayout(f1);
-        for(int i = 1; i < 5; i++)
+        for(int i = 1; i < 6; i++)
             row[i].setLayout(f2);
         
-        for(int i = 0; i < 19; i++) {
+        for(int i = 0; i < 23; i++) {
             button[i] = new JButton();
             button[i].setText(buttonString[i]);
             button[i].setBackground(Color.white);
@@ -64,6 +67,13 @@ public class Calculator extends JFrame implements ActionListener {
         for(int i = 14; i < 18; i++)
             button[i].setPreferredSize(rColumnDimension);
         button[18].setPreferredSize(zeroButDimension);
+        button[19].setPreferredSize(regularDimension);
+        button[20].setPreferredSize(zeroButDimension);
+        button[21].setPreferredSize(zeroButDimension);
+        button[22].setPreferredSize(regularDimension);
+
+
+       
         
         row[0].add(display); // Adds text view to JPanel
         add(row[0]); // Adds JPanel to Frame
@@ -88,6 +98,12 @@ public class Calculator extends JFrame implements ActionListener {
             row[4].add(button[i]);
         row[4].add(button[17]);
         add(row[4]);
+
+        row[5].add(button[19]);
+        row[5].add(button[20]);
+        row[5].add(button[21]);
+        row[5].add(button[22]);
+        add(row[5]);
         
         setVisible(true);
         
@@ -107,6 +123,39 @@ public class Calculator extends JFrame implements ActionListener {
     public void getSqrt() {
         try {
             double value = Math.sqrt(Double.parseDouble(display.getText()));
+            display.setText(Double.toString(value));
+        } catch(NumberFormatException e) {
+        }
+    }
+
+    public void getSquare() {
+        try {
+            double value = Math.pow(Double.parseDouble(display.getText()) , 2);
+            display.setText(Double.toString(value));
+        } catch(NumberFormatException e) {
+        }
+    }
+
+    public void factorial() {
+        try {
+            double value = factorial1(Double.parseDouble(display.getText()) );
+            display.setText(Double.toString(value));
+        } catch(NumberFormatException e) {
+        }
+    }
+    public static double factorial1(double number) {
+        double result = 1;
+
+        for (double factor = 2; factor <= number; factor++) {
+            result *= factor;
+        }
+
+        return result;
+    }
+
+    public void log() {
+        try {
+            double value = Math.log(Double.parseDouble(display.getText()) );
             display.setText(Double.toString(value));
         } catch(NumberFormatException e) {
         }
@@ -210,6 +259,14 @@ public class Calculator extends JFrame implements ActionListener {
             getResult();
         if(ae.getSource() == button[18])
             display.append("0");
+        if(ae.getSource() == button[19])
+            getSquare();
+        if(ae.getSource() == button[20])
+            display.append("3.14");
+        if(ae.getSource() == button[21])
+            factorial();
+        if(ae.getSource() == button[22])
+            log();
     }
     
     public static void main(String[] arguments) {
